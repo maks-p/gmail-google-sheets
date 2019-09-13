@@ -1,7 +1,7 @@
 function getMessage() {
   
     // Search term that returns only relevant emails in Gmail
-    var searchTerm = 'from:admin@jupiterdisco.smarttab.com AND Daily Sales Report'
+    var searchTerm = 'from:<EMAIL_HERE> AND Daily Sales Report'
     
     var thread = GmailApp.search(searchTerm, 0, 10)[0];
     var message = thread.getMessages()[0];
