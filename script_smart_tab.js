@@ -1,7 +1,7 @@
 function getMessage() {
   
     // Search term that returns only relevant emails in Gmail
-    var searchTerm = 'from:noreply@messaging.squareup.com AND Daily Sales Summary Report'
+    var searchTerm = 'from:admin@jupiterdisco.smarttab.com AND Daily Sales Report'
     
     var thread = GmailApp.search(searchTerm, 0, 10)[0];
     var message = thread.getMessages()[0];
@@ -13,7 +13,7 @@ function getMessage() {
   
 function connectSpreadsheet() {
 
-    var url = 'https://docs.google.com/spreadsheets/d/1SMHd310dIH2DkCW6UTh4xOsfAssZ6ozkfFYZrV-cB78/edit#gid=0';
+    var url = 'https://docs.google.com/spreadsheets/d/<YOUR_KEY_HERE>/edit#gid=0';
     var ss = SpreadsheetApp.openByUrl(url);
 
     return ss;
@@ -61,13 +61,13 @@ function parseEmailPOS() {
     var line_array = messageBody.split("\n");
     
     // POS Specific Data Here
-    var reportDate = new Date(message.getSubject().split(" for ")[1]);
-    var BusinessDay = line_array[212].split(">")[1].split(' ')[0];
-    var adjustedGrossSales = line_array[299].split('$')[1];
-    var discounts = line_array[380].split('$')[1];
-    var salesTax = line_array[437].split('$')[1];
-    var netSales = line_array[413].split('$')[1];
-    var ccTips = line_array[470].split('$')[1];
+    var reportDate = new Date(line_array[13].split(">")[1].replace('</td', '').replace(/\./g,'/'))
+    var BusinessDay = line_array[12].split(">")[1].replace('</td', '')
+    var adjustedGrossSales = line_array[42].split("$")[1].replace(/[^\d.]/g, '')
+    var discounts = line_array[46].split('$')[1].replace(/[^\d.]/g, '')
+    var salesTax = line_array[58].split('$')[1].replace(/[^\d.]/g, '')
+    var netSales = line_array[54].split('$')[1].replace(/[^\d.]/g, '')
+    var ccTips = line_array[73].split('$')[1].replace(/[^\d.]/g, '')
    
     // Check Date function 
     function checkDate() {
@@ -81,8 +81,8 @@ function parseEmailPOS() {
     if (!checkDate()) {
       
       // POS Specific Data Here
-      if (line_array[399].trim() === '<!-- Net Sales Partial -->' &&
-          line_array[456].trim() === '<!-- Tips Partial -->') {
+      if (line_array[36].trim() === '<!-- REVENUE -->' &&
+          line_array[72].trim() === '<td style="font-family:arial;font-size:14px;">+ TIPS:</td>') {
         
          salesData.appendRow([reportDate, 
                               BusinessDay, 
