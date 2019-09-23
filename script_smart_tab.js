@@ -60,14 +60,18 @@ function parseEmailPOS() {
     var messageBody = message.getBody();
     var line_array = messageBody.split("\n");
     
+    function cleanHTML(row) {
+        return line_array[row].split('$')[1].replace(/[^\d.]/g, '')
+    }
+
     // POS Specific Data Here
     var reportDate = new Date(line_array[13].split(">")[1].replace('</td', '').replace(/\./g,'/'))
     var BusinessDay = line_array[12].split(">")[1].replace('</td', '')
-    var adjustedGrossSales = line_array[42].split("$")[1].replace(/[^\d.]/g, '')
-    var discounts = line_array[46].split('$')[1].replace(/[^\d.]/g, '')
-    var salesTax = line_array[58].split('$')[1].replace(/[^\d.]/g, '')
-    var netSales = line_array[54].split('$')[1].replace(/[^\d.]/g, '')
-    var ccTips = line_array[73].split('$')[1].replace(/[^\d.]/g, '')
+    var adjustedGrossSales = cleanHTML(42)
+    var discounts = cleanHTML(46)
+    var salesTax = cleanHTML(58)
+    var netSales = cleanHTML(54)
+    var ccTips = cleanHTML(73)
    
     // Check Date function 
     function checkDate() {
@@ -97,7 +101,7 @@ function parseEmailPOS() {
         };
     } else {
       Logger.log('Date Already Exists');
-      }
+        }
 };
   
   
